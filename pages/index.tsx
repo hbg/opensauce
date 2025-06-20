@@ -176,7 +176,18 @@ export default function Home() {
             <Autocomplete
               renderTags={(value, getTagProps) =>
                 value.map((option, index) => (
-                  <Chip {...getTagProps({ index })} label={option} sx={{ bgcolor: '#fff', color: '#000' }} deleteIcon={<CloseIcon sx={{ color: '#000' }} />} />
+                  <Chip
+                    {...getTagProps({ index })}
+                    label={option}
+                    sx={{
+                      bgcolor: '#fff',
+                      color: '#000',
+                      '& .MuiChip-deleteIcon': {
+                        color: '#000',
+                        '&:hover': { color: '#000' },
+                      },
+                    }}
+                  />
                 ))}
 
               sx={{ flexGrow: 1, mr: 2 }}
