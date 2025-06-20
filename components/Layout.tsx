@@ -1,50 +1,60 @@
 import React, { ReactNode } from "react";
 import Header from "./Header";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { CssBaseline, Box, useTheme } from "@mui/material";
+
+const themeDark = createTheme({
+  typography: {
+    fontFamily: "'Funnel Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+  },
+  components: {
+    MuiInputBase: {
+      styleOverrides: {
+        input: {
+          fontFamily: "'Funnel Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+        }
+      }
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          fontFamily: "'Funnel Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+        }
+      }
+    }
+  },
+  palette: {
+    mode: "dark", // important for consistent dark styling
+    background: {
+      default: "transparent"
+    },
+    text: {
+      primary: "#ffffff"
+    },
+    primary: {
+      main: "#f1f1f1"
+    }
+  }
+});
 
 type Props = {
   children: ReactNode;
 };
 
 const Layout: React.FC<Props> = (props) => (
-  <div>
-    <Header />
-    <div className="layout">{props.children}</div>
-    <style jsx global>{`
-      html {
-        box-sizing: border-box;
-      }
-
-      *,
-      *:before,
-      *:after {
-        box-sizing: inherit;
-      }
-
-      body {
-        margin: 0;
-        padding: 0;
-        font-size: 16px;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-          Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-          "Segoe UI Symbol";
-        background: rgba(0, 0, 0, 0.05);
-      }
-
-      input,
-      textarea {
-        font-size: 16px;
-      }
-
-      button {
-        cursor: pointer;
-      }
-    `}</style>
-    <style jsx>{`
-      .layout {
-        padding: 0 2rem;
-      }
-    `}</style>
-  </div>
+  <ThemeProvider theme={themeDark}>
+    <CssBaseline /> {/* This sets default background + text styles */}
+    <Box
+      sx={{
+        minHeight: "100vh",
+        bgcolor: "background.default",
+        color: "text.primary"
+      }}
+    >
+      <Header />
+      <div className="layout">{props.children}</div>
+    </Box>
+  </ThemeProvider>
 );
 
 export default Layout;

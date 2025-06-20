@@ -1,5 +1,5 @@
 {
-  "name": "hello-next",
+  "name": "sauce",
   "version": "1.0.0",
   "description": "",
   "scripts": {
@@ -8,17 +8,24 @@
     "start": "next start"
   },
   "keywords": [],
-  "author": "",
+  "author": "Harris Beg",
   "license": "MIT",
   "dependencies": {
-    "next": "12.0.10",
-    "react": "17.0.2",
-    "react-dom": "17.0.2",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@fontsource/roboto": "^5.2.6",
+    "@mui/icons-material": "^7.1.2",
+    "@mui/material": "^7.1.1",
+    "@octokit/auth-app": "^8.0.1",
+    "@octokit/rest": "^22.0.0",
+    "next": "^15.3.4",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "react-markdown": "8.0.0"
   },
   "devDependencies": {
     "@types/node": "17.0.14",
-    "@types/react": "17.0.38",
+    "@types/react": "^18.2.0",
     "typescript": "4.5.5"
   }
 }
