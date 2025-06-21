@@ -21,7 +21,9 @@ interface Props {
         className="glass-card"
         sx={{
           display: "flex",
-          alignItems: "center",
+          flexDirection: { xs: 'column', sm: 'row' },
+          alignItems: { xs: 'stretch', sm: 'center' },
+          
           padding: "0.75rem 1rem",
           margin: "2rem auto",
           maxWidth: "800px",
@@ -32,7 +34,7 @@ interface Props {
           boxShadow: "0 4px 24px rgba(0,0,0,0.2)"
         }}
       >
-        <SearchIcon sx={{ color: '#fff', mr: 2 }} />
+        <SearchIcon sx={{ color: '#fff', mr: { xs: 0, sm: 2 }, mb: { xs: 1, sm: 0 } }} />
         <TextField
           placeholder="Enter GitHub repository URL..."
           value={value}
@@ -47,7 +49,8 @@ interface Props {
           disabled={loading || !value.trim()}
           className="glass-button"
           sx={{
-            marginLeft: "1rem",
+            marginLeft: { xs: 0, sm: '1rem' },
+            marginTop: { xs: 1, sm: 0 },
             borderRadius: "12px",
             backgroundColor: '#fff',
             '& .MuiButton-startIcon': {

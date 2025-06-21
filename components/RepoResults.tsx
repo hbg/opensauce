@@ -53,8 +53,18 @@ const RepoResults: React.FC<Props> = ({ repos }) => {
               boxShadow: '0 6px 28px rgba(0,0,0,0.25)',
             }
           }}>
-            <Box display="flex" alignItems="center" justifyContent="space-between">
-              <Typography variant="h6">{r.name}</Typography>
+            <Box display="flex" alignItems="center" justifyContent="space-between" sx={{ minWidth: 0 }}>
+              <Typography
+                variant="h6"
+                sx={{
+                  wordBreak: 'break-word',
+                  fontSize: { xs: '1rem', sm: '1.25rem' },
+                  flex: 1,
+                  minWidth: 0,
+                }}
+              >
+                {r.name}
+              </Typography>
               <Tooltip title="Copy repo URL">
                 <IconButton
                   size="small"

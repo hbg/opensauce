@@ -26,6 +26,7 @@ export default function Home() {
   const [mode, setMode] = useState<'summarize' | 'search'>('search');
   const [tags, setTags] = useState<string[]>([]);
   const [repos, setRepos] = useState<any[]>([]);
+  const [tagInput, setTagInput] = useState('');
   const [page, setPage] = useState(1);
   const pageSize = 10;
 
@@ -183,7 +184,7 @@ export default function Home() {
           <Box sx={{ mt: 3 }}>
             <Card
               sx={{
-                display: 'flex', alignItems: 'center', padding: '0.75rem 1rem', borderRadius: '16px', background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.15)', boxShadow: '0 4px 24px rgba(0,0,0,0.2)', maxWidth: '800px', margin: '0 auto'
+                display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, alignItems: { xs: 'stretch', sm: 'center' }, padding: '0.75rem 1rem', borderRadius: '16px', background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.15)', boxShadow: '0 4px 24px rgba(0,0,0,0.2)', maxWidth: '800px', margin: '0 auto'
               }}
             >
             <Autocomplete
@@ -203,16 +204,26 @@ export default function Home() {
                   />
                 ))}
 
-              sx={{ flexGrow: 1, mr: 2 }}
+              sx={{ flexGrow: 1, mr: { xs: 0, sm: 2 }, mb: { xs: 1, sm: 0 } }}
               multiple
               freeSolo
               options={[]}
               value={tags}
+              inputValue={tagInput}
+              onInputChange={(e, val) => setTagInput(val)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ',') {
+                  if (!tagInput.trim()) return;
+                  e.preventDefault();
+                  setTags([...tags, tagInput.trim()]);
+                  setTagInput('');
+                }
+              }}
               onChange={(e, val) => setTags(val)}
-              renderInput={(params) => <TextField {...params} label="Search terms" placeholder="Type a keyword and press Enter" />}
+              renderInput={(params) => <TextField {...params} label="Keywords" placeholder="Enter keywords" />}
             />
             <Box>
-              <Button className="glass-button" onClick={onSubmit} variant="contained" disabled={loading || tags.length === 0} sx={{ borderRadius: '12px', backgroundColor: '#fff' }}>
+              <Button className="glass-button" onClick={onSubmit} variant="contained" disabled={loading || tags.length === 0} sx={{ borderRadius: '12px', backgroundColor: '#fff', mt: { xs: 1, sm: 0 } }}>
                 {loading ? <CircularProgress size={20} /> : 'Search'}
               </Button>
             </Box>
@@ -253,7 +264,14 @@ export default function Home() {
             <RepoResults repos={repos.slice((page-1)*pageSize, page*pageSize)} />
             {repos.length > pageSize && (
               <Box display="flex" justifyContent="center" mt={2}>
-                <Pagination count={Math.ceil(repos.length / pageSize)} page={page} onChange={(_, v) => setPage(v)} color="primary" />
+                <Pagination
+                  count={Math.ceil(repos.length / pageSize)}
+                  page={page}
+                  onChange={(_, v) => setPage(v)}
+                  color="primary"
+                  size="small"
+                  sx={{ flexWrap: { xs: 'wrap', sm: 'nowrap' }, justifyContent: 'center' }}
+                />
               </Box>
             )}
           </>
