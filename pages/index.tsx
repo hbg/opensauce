@@ -163,7 +163,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>sauce – search GitHub repositories and summarize issues</title>
+        <title>sauce – search repositories and summarize issues</title>
         <meta name="description" content="Discover open-source projects, search repositories by keywords, and get concise issue summaries to start contributing quickly." />
         <meta name="keywords" content="open source, GitHub, repository search, issue summarization, contribute" />
 
@@ -179,6 +179,14 @@ export default function Home() {
         <meta property="twitter:title" content="Sauce" />
         <meta property="twitter:description" content="Search GitHub repositories and dive headfirst into feature requests with AI" />
         <meta property="twitter:image" content="https://opensauce-two.vercel.app/metatag.jpg" />
+
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+
+        <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+        <link rel="manifest" href="/manifest.webmanifest" />
       </Head>
       <Layout>
       <Container maxWidth="md" style={{ marginTop: "4rem" }}>
