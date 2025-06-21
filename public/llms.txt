@@ -1,0 +1,22 @@
+# llms.txt – Large-Language-Model declaration file
+# Last updated: 2025-06-20
+
+site: https://opensauce-two.vercel.app/
+
+# Purpose
+# This website offers an interface for searching public GitHub repositories and
+# uses OpenAI GPT-3.5 to summarise open issues. The summaries are generated
+# on-demand and are not stored permanently.
+
+# Data Usage
+# • Input: Repository metadata, issue titles/bodies, first 5 comments per issue, and
+#   up to 20 short source-code snippets are sent to the OpenAI API.
+# • Output: A markdown summary shown to the user and discarded after the session.
+# • No personal user data is sent to the LLM provider.
+
+# Provider
+llm_provider: OpenAI (gpt-3.5-turbo)
+
+# Opt-out
+# Repository owners who do not want their issues summarised can add the label
+# `no-ai-summary` to their issues; these will be filtered out of the prompt.

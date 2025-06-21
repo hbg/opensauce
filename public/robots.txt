@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /api/
+
+# Allow crawlers to index the main site but not the API endpoints.
+
+Sitemap: https://opensauce-two.vercel.app/sitemap.xml
