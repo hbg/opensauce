@@ -81,8 +81,9 @@ import { rateLimit } from '../../lib/rateLimit';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   // Basic same-origin check (except during local dev)
-  const origin = req.headers.origin || '';
-  if (!origin.includes(req.headers.host || '') && !(req.headers.host || '').startsWith('localhost')) {
+  const origin = req.headers.origin as string | undefined;
+  if (origin && !origin.includes(req.headers.host || '')) {
+    // Origin header present but mismatched → forbid cross-site requests
     return res.status(403).json({ error: 'Forbidden' });
   }
 
