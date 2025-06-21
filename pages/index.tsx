@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Typography, Card, CardContent, Box, ToggleButtonGroup, ToggleButton, Autocomplete, TextField, CircularProgress, Button, Pagination, IconButton, Chip } from "@mui/material";
 import Image from "next/image";
 import Layout from "../components/Layout";
@@ -27,6 +27,57 @@ export default function Home() {
   const [tags, setTags] = useState<string[]>([]);
   const [repos, setRepos] = useState<any[]>([]);
   const [tagInput, setTagInput] = useState('');
+  const [typedSummary, setTypedSummary] = useState('');
+  const [typedPlaceholder, setTypedPlaceholder] = useState('');
+  const placeholderExamples = [
+    'mri,unet,segmentation,3d,augmentation',
+    'rl,motion,control,policy,simulation',
+    'nlp,bert,transformer,question-answering,fine-tuning',
+    'gan,images,super-resolution,style-transfer,pytorch',
+    'cuda,kernels,gpu,optimization,parallel',
+  ];
+
+  // typing effect for generated summary
+  useEffect(() => {
+    setTypedSummary('');
+    if (!summary) return;
+    let i = 0;
+    const id = setInterval(() => {
+      setTypedSummary((prev) => prev + summary[i]);
+      i += 1;
+      if (i >= summary.length) clearInterval(id);
+    }, 20);
+    return () => clearInterval(id);
+  }, [summary]);
+
+  // typing effect for keywords placeholder
+  useEffect(() => {
+    let active = true;
+    let exampleIndex = 0;
+    let charIndex = 0;
+
+    const typeNext = () => {
+      if (!active) return;
+      const current = placeholderExamples[exampleIndex];
+      if (charIndex <= current.length) {
+        setTypedPlaceholder(current.slice(0, charIndex));
+        charIndex += 1;
+        setTimeout(typeNext, 120);
+      } else {
+        setTimeout(() => {
+          charIndex = 0;
+          exampleIndex = (exampleIndex + 1) % placeholderExamples.length;
+          setTypedPlaceholder('');
+          setTimeout(typeNext, 500);
+        }, 1500);
+      }
+    };
+
+    typeNext();
+    return () => {
+      active = false;
+    };
+  }, []);
   const [page, setPage] = useState(1);
   const pageSize = 10;
 
@@ -67,19 +118,27 @@ export default function Home() {
       const data = await resp.json();
       if (data.error) throw new Error(data.error);
       setSummary(data.summary);
-    } catch (err) {
+      setErrorMsg('');
+    } catch (err: any) {
       console.error('Summary fetch failed', err);
+      setErrorMsg(err?.message || 'Could not generate summary. The repository may be too large or complex.');
     } finally {
       setLoadingSummary(false);
     }
   };
 
   const handleSearchRepos = async () => {
-    if (tags.length === 0) return;
-    if (tags.length === 0) return;
+    // include any text still in the input box as a tag
+    let searchTags = tags;
+    if (tagInput.trim()) {
+      searchTags = [...tags, tagInput.trim()];
+      setTags(searchTags);
+      setTagInput('');
+    }
+    if (searchTags.length === 0) return;
     try {
       setLoading(true);
-      const query = tags.join(' ');
+      const query = searchTags.join(' ');
       const resp = await fetch(`/api/search-repos?terms=${encodeURIComponent(query)}`);
       const data = await resp.json();
       if (data.error) throw new Error(data.error);
@@ -160,6 +219,10 @@ export default function Home() {
           onChange={(e, val) => {
             if (val) {
               setMode(val);
+              if (val === 'search') {
+                setSummary('');
+                setLoadingSummary(false);
+              }
               setErrorMsg(''); // clear banner when switching modes
             }
           }}
@@ -220,7 +283,7 @@ export default function Home() {
                 }
               }}
               onChange={(e, val) => setTags(val)}
-              renderInput={(params) => <TextField {...params} label="Keywords" placeholder="Enter keywords" />}
+              renderInput={(params) => <TextField {...params} label="Keywords" placeholder={typedPlaceholder || 'Enter keywords'} />}
             />
             <Box>
               <Button className="glass-button" onClick={onSubmit} variant="contained" disabled={loading || tags.length === 0} sx={{ borderRadius: '12px', backgroundColor: '#fff', mt: { xs: 1, sm: 0 } }}>
@@ -254,14 +317,21 @@ export default function Home() {
               <Typography variant="h5" sx={{ mb: 2, color: '#000', fontFamily: 'Jua' }}>
                 Project Summary & Getting Started Guide
               </Typography>
-              <ReactMarkdown>{summary}</ReactMarkdown>
+              <ReactMarkdown>{typedSummary}</ReactMarkdown>
             </CardContent>
           </Card>
         )}
 
         {mode === 'search' && (
           <>
-            <RepoResults repos={repos.slice((page-1)*pageSize, page*pageSize)} />
+            <RepoResults
+              repos={repos.slice((page-1)*pageSize, page*pageSize)}
+              onSummarize={(url) => {
+                setRepoUrl(url);
+                setMode('summarize');
+                handleFetchIssues();
+              }}
+            />
             {repos.length > pageSize && (
               <Box display="flex" justifyContent="center" mt={2}>
                 <Pagination

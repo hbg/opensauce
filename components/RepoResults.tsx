@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, Card, CardContent, Typography, IconButton, Tooltip, Chip } from '@mui/material';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 interface Repo {
@@ -13,6 +14,7 @@ interface Repo {
 
 interface Props {
   repos: Repo[];
+  onSummarize?: (url: string) => void;
 }
 
 const formatStars = (num: number) => {
@@ -21,7 +23,7 @@ const formatStars = (num: number) => {
   return num.toString();
 };
 
-const RepoResults: React.FC<Props> = ({ repos }) => {
+const RepoResults: React.FC<Props> = ({ repos, onSummarize }) => {
   if (!repos || repos.length === 0) return null;
 
   return (
@@ -65,6 +67,18 @@ const RepoResults: React.FC<Props> = ({ repos }) => {
               >
                 {r.name}
               </Typography>
+              <Tooltip title="Summarize with AI">
+                <IconButton
+                  size="small"
+                  sx={{ color: '#000', mr: 0.5 }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onSummarize?.(r.url);
+                  }}
+                >
+                  <AutoAwesomeIcon fontSize="small" />
+                </IconButton>
+              </Tooltip>
               <Tooltip title="Copy repo URL">
                 <IconButton
                   size="small"

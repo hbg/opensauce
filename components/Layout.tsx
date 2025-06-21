@@ -1,5 +1,6 @@
 import React, { ReactNode } from "react";
 import Header from "./Header";
+import ShareButtons from "./ShareButtons";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { CssBaseline, Box, useTheme } from "@mui/material";
 
@@ -52,6 +53,7 @@ const Layout: React.FC<Props> = (props) => (
       }}
     >
       <Header />
+      <ShareButtons />
       <div className="layout">{props.children}</div>
     </Box>
   </ThemeProvider>
